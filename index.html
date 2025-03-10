@@ -5,11 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preço do Bitcoin</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Estilos para centralizar e reduzir o tamanho do gráfico */
+        .chart-container {
+            width: 400px;
+            height: 300px;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
 
     <h1>Preço do Bitcoin (BTC/USD)</h1>
-    <canvas id="cryptoChart"></canvas>
+
+    <!-- Contêiner com tamanho reduzido -->
+    <div class="chart-container">
+        <canvas id="cryptoChart"></canvas>
+    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
@@ -39,6 +51,7 @@
                         },
                         options: {
                             responsive: true,
+                            maintainAspectRatio: false, // Mantém o tamanho definido no CSS
                             scales: {
                                 y: {
                                     beginAtZero: false,
