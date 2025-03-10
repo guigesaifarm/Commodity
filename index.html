@@ -3,59 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Preço do Bitcoin</title>
+    <title>Preço das Criptomoedas</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         /* Estilos para centralizar e reduzir o tamanho do gráfico */
         .chart-container {
-            width: 300px;
-            height: 200px;
+            width: 90%;
+            max-width: 500px;
+            height: 300px;
             margin: auto;
         }
     </style>
 </head>
 <body>
 
-    <h1>Preço do Bitcoin (BTC/USD)</h1>
+    <h1>Preços das Criptomoedas</h1>
 
-    <!-- Contêiner com tamanho reduzido -->
+    <!-- Contêiner para o gráfico -->
     <div class="chart-container">
         <canvas id="cryptoChart"></canvas>
     </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
-            const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
+            // Moedas desejadas
+            const cryptoIds = ["bitcoin", "xrp", "binancecoin", "ethereum", "solana", "dogecoin"];
+            const cryptoNames = ["Bitcoin (BTC)", "XRP (XRP)", "BNB (BNB)", "Ethereum (ETH)", "Solana (SOL)", "Dogecoin (DOGE)"];
+
+            // URL da API CoinGecko
+            const url = `https://api.coingecko.com/api/v3/simple/price?ids=${cryptoIds.join(",")}&vs_currencies=usd`;
 
             try {
                 const response = await fetch(url);
                 const data = await response.json();
 
-                if (data && data.bitcoin && data.bitcoin.usd) {
-                    const price = data.bitcoin.usd;
-                    console.log(`Preço do Bitcoin: $${price}`);
+                // Verifica se os dados são válidos
+                if (data) {
+                    const prices = cryptoIds.map(id => data[id]?.usd || 0); // Obtém os preços ou define como 0 se não houver resposta
+
+                    console.log("Preços das criptomoedas:", prices);
 
                     // Criando o gráfico com Chart.js
                     const ctx = document.getElementById('cryptoChart').getContext('2d');
                     new Chart(ctx, {
                         type: 'bar',
                         data: {
-                            labels: ["Bitcoin (BTC/USD)"],
+                            labels: cryptoNames,
                             datasets: [{
                                 label: 'Preço em USD',
-                                data: [price],
-                                backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                                borderColor: 'rgba(255, 206, 86, 1)',
+                                data: prices,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.5)',  // BTC
+                                    'rgba(54, 162, 235, 0.5)',  // XRP
+                                    'rgba(255, 206, 86, 0.5)',  // BNB
+                                    'rgba(75, 192, 192, 0.5)',  // ETH
+                                    'rgba(153, 102, 255, 0.5)', // SOL
+                                    'rgba(255, 159, 64, 0.5)'   // DOGE
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
                                 borderWidth: 1
                             }]
                         },
                         options: {
                             responsive: true,
-                            maintainAspectRatio: false, // Mantém o tamanho definido no CSS
+                            maintainAspectRatio: false, // Mantém o tamanho do CSS
                             scales: {
                                 y: {
                                     beginAtZero: false,
-                                    suggestedMin: price - 500, // Ajusta o eixo para melhor visualização
+                                    suggestedMin: Math.min(...prices) * 0.9, // Ajusta o eixo para melhor visualização
                                 }
                             }
                         }
@@ -65,7 +87,7 @@
                     console.error("Erro: Resposta da API não contém dados válidos.");
                 }
             } catch (error) {
-                console.error("Erro ao obter dados do Bitcoin:", error);
+                console.error("Erro ao obter dados das criptomoedas:", error);
             }
         });
     </script>
