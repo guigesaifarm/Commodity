@@ -43,7 +43,11 @@ document.addEventListener("DOMContentLoaded", async function () {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: false
+                    beginAtZero: false, // O eixo Y não começa do zero
+                    suggestedMin: 40000, // Sugere que o menor valor seja 40.000
+                    ticks: {
+                        stepSize: 5000 // Intervalo de 5.000 para melhor visualização
+                    }
                 }
             }
         }
