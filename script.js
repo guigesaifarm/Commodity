@@ -1,5 +1,5 @@
  document.addEventListener("DOMContentLoaded", async function () {
-    const apiKey = "9IZ2GEIJ61BKPZ1D.";  // Substitua pela sua chave obtida no site da Alpha Vantage
+    const apiKey = "ded33340fee7453:o3iflq121hjaw7k";  // Substitua pela sua chave obtida no site da Alpha Vantage
     const commodity = { symbol: "COFFEE", market: "NYBOT" };  // Apenas COFFEE
 
     let price = 0; // Variável para armazenar o preço
