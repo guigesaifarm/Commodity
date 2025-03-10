@@ -1,16 +1,23 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    const apiKey = "ded33340fee7453:o3iflq121hjaw7k"; // Substitua pela sua API Key da Trading Economics
+    const apiKey = "ded33340fee7453:o3iflq121hjaw7k"; // Substitua pela sua API Key correta
     const asset = "bitcoin"; // Nome do ativo na API
-    const url = `https://api.tradingeconomics.com/markets/${asset}:cur?c=${apiKey}`; // Endpoint correto para criptomoedas
+    const url = `https://api.tradingeconomics.com/markets/${asset}:cur?c=${apiKey}`;
 
     let price = 0;
 
     try {
         const response = await fetch(url);
-        const data = await response.json();
+        
+        // Verifica se a resposta está OK (200)
+        if (!response.ok) {
+            throw new Error(`Erro ${response.status}: ${response.statusText}`);
+        }
 
-        if (data && data[0] && data[0].Last) {
+        const data = await response.json();
+        
+        if (data && data.length > 0 && data[0].Last) {
             price = parseFloat(data[0].Last); // Obtém o preço atual do Bitcoin
+            console.log(`Preço do Bitcoin (BTC/USD): $${price}`);
         } else {
             console.error("Erro: Resposta da API não contém dados válidos.");
         }
@@ -23,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async function () {
     new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ["Bitcoin (BTC/USD)"], // Nome do ativo no eixo X
+            labels: ["Bitcoin (BTC/USD)"],
             datasets: [{
                 label: 'Preço em USD',
                 data: [price],
@@ -36,7 +43,7 @@ document.addEventListener("DOMContentLoaded", async function () {
             responsive: true,
             scales: {
                 y: {
-                    beginAtZero: false // O preço do BTC nunca será zero, então começamos do valor mínimo adequado
+                    beginAtZero: false
                 }
             }
         }
