@@ -1,1 +1,7 @@
+canvas {
+    max-width: 400px; /* Ajuste conforme necessário */
+    max-height: 300px; /* Ajuste conforme necessário */
+    margin: auto;
+    display: block;
+}
 
