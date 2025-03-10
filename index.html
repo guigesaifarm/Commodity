@@ -5,14 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Preço do Bitcoin</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
     <h1>Preço do Bitcoin (BTC/USD)</h1>
-    <canvas id="cryptoChart"></canvas> <!-- Canvas atualizado -->
+    <canvas id="cryptoChart"></canvas>
 
-    <script src="script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd";
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (data && data.bitcoin && data.bitcoin.usd) {
+                    const price = data.bitcoin.usd;
+                    console.log(`Preço do Bitcoin: $${price}`);
+
+                    // Criando o gráfico com Chart.js
+                    const ctx = document.getElementById('cryptoChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ["Bitcoin (BTC/USD)"],
+                            datasets: [{
+                                label: 'Preço em USD',
+                                data: [price],
+                                backgroundColor: 'rgba(255, 206, 86, 0.5)',
+                                borderColor: 'rgba(255, 206, 86, 1)',
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                y: {
+                                    beginAtZero: false,
+                                    suggestedMin: price - 500, // Ajusta o eixo para melhor visualização
+                                }
+                            }
+                        }
+                    });
+
+                } else {
+                    console.error("Erro: Resposta da API não contém dados válidos.");
+                }
+            } catch (error) {
+                console.error("Erro ao obter dados do Bitcoin:", error);
+            }
+        });
+    </script>
 
 </body>
 </html>
