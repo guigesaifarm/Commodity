@@ -1,24 +1,33 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    const apiKey = "SUA_API_KEY";  // Pegue uma chave na Alpha Vantage ou outra API
+    const apiKey = "SUA_API_KEY";  // Substitua pela sua chave obtida no site da Alpha Vantage
     const commodities = [
-        "WHEAT", "CORN", "SOYBEANS", "SUGAR", "COFFEE", 
-        "COTTON", "RICE", "PALM OIL", "MILK", "BEEF"
+        { symbol: "WHEAT", market: "CME" },  
+        { symbol: "CORN", market: "CME" },  
+        { symbol: "SOYBEANS", market: "CME" },
+        { symbol: "SUGAR", market: "NYBOT" },  
+        { symbol: "COFFEE", market: "NYBOT" },
+        { symbol: "COTTON", market: "NYBOT" },  
+        { symbol: "RICE", market: "CME" },  
+        { symbol: "PALM OIL", market: "MYX" },
+        { symbol: "MILK", market: "CME" },  
+        { symbol: "BEEF", market: "CME" }
     ];
     
     let labels = [];
     let values = [];
 
-    for (let commodity of commodities) {
+    for (let item of commodities) {
         try {
-            const response = await fetch(`https://www.alphavantage.co/query?function=${commodity}&apikey=${apiKey}`);
+            const url = `https://www.alphavantage.co/query?function=COMMODITY_EXCHANGE_RATE&from_symbol=${item.symbol}&to_market=${item.market}&apikey=${apiKey}`;
+            const response = await fetch(url);
             const data = await response.json();
             
-            if (data && data["data"]) {
-                labels.push(commodity);
-                values.push(parseFloat(data["data"]["price"]));  // Pega o preço atual
+            if (data && data["Realtime Commodity Exchange Rate"]) {
+                labels.push(item.symbol);
+                values.push(parseFloat(data["Realtime Commodity Exchange Rate"]["5. Exchange Rate"])); // Obtém o preço
             }
         } catch (error) {
-            console.error(`Erro ao obter dados de ${commodity}:`, error);
+            console.error(`Erro ao obter dados de ${item.symbol}:`, error);
         }
     }
 
